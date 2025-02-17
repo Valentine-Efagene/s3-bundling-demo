@@ -13,7 +13,9 @@ export class BundleDto {
     type: 'array',
     description: 'Array of object keys to be bundled',
     example: [
-      "jobs.png"],
+      "jobs.png",
+      "test pdf.pdf"
+    ],
   })
   @IsNotEmpty()
   @IsArray()

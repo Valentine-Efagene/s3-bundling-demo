@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import Joi from 'joi';
+import * as Joi from 'joi';
 import { ConfigModule } from '@nestjs/config';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
@@ -15,8 +15,11 @@ import { ConfigModule } from '@nestjs/config';
         CUSTOM_AWS_REGION: Joi.string(),
       })
     }),
+    StorageModule
   ],
-  controllers: [AppController],
+  controllers: [
+    //AppController
+  ],
   providers: [AppService],
 })
 export class AppModule { }
