@@ -4,6 +4,7 @@ import Stream, { PassThrough } from 'node:stream'
 import * as archiver from 'archiver'
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
+import { ByteLogger } from './util/ByteLogger';
 
 @Injectable()
 export class StorageService {
@@ -69,7 +70,8 @@ export class StorageService {
     })
 
     const passthrough = new PassThrough()
-    archiveStream.pipe(passthrough)
+    const byteLogger = new ByteLogger();
+    archiveStream.pipe(byteLogger).pipe(passthrough)
 
     const responses = await Promise.all(objectKeys.map((key) => this.getObject(key)
     ))
