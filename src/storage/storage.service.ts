@@ -49,6 +49,7 @@ export class StorageService {
           Bucket: this.bucketName,
           Key: key,
           Body: fileStream, // Can be an unknown-length stream
+          ContentType: "application/zip",
         },
       });
 
