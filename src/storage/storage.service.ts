@@ -82,10 +82,19 @@ export class StorageService {
       )
     })
 
-    await archiveStream.finalize()
-
     const key = `${archiveKey}.${FORMAT}`
-    await this.uploadStream(key, passthrough)
+
+    /**
+     * The order of these calls matter
+     * You need to initialize the promise for the upload first,
+     * so it's open for passthrough, wait for the archive to finalize, 
+     * then await the upload promise, else the process gets stuck for 
+     * large files
+     */
+
+    const uploadPromise = this.uploadStream(key, passthrough)
+    await archiveStream.finalize()
+    await uploadPromise
     return key
   }
 }
