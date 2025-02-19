@@ -41,7 +41,7 @@ export class StorageService {
     return response
   }
 
-  public async uploadStream(key: string, fileStream: PassThrough) {
+  public async uploadStream(key: string, fileStream: PassThrough, contentType: string = "application/octet-stream") {
     try {
       const uploadTask = new Upload({
         client: this.s3Client,
@@ -49,7 +49,7 @@ export class StorageService {
           Bucket: this.bucketName,
           Key: key,
           Body: fileStream, // Can be an unknown-length stream
-          ContentType: "application/zip",
+          ContentType: contentType,
         },
       });
 
@@ -93,7 +93,7 @@ export class StorageService {
      * large files
      */
 
-    const uploadPromise = this.uploadStream(key, passthrough)
+    const uploadPromise = this.uploadStream(key, passthrough, "application/zip")
     await archiveStream.finalize()
     await uploadPromise
     return key
