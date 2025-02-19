@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import Stream, { PassThrough } from 'node:stream'
+import { PassThrough, Readable } from 'node:stream'
 import * as archiver from 'archiver'
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
@@ -41,7 +41,7 @@ export class StorageService {
     return response
   }
 
-  public async uploadStream(key: string, fileStream: any) {
+  public async uploadStream(key: string, fileStream: PassThrough) {
     try {
       const uploadTask = new Upload({
         client: this.s3Client,
@@ -77,7 +77,7 @@ export class StorageService {
     ))
 
     responses.forEach((response, index) => {
-      archiveStream.append(response.Body as Stream.Readable,
+      archiveStream.append(response.Body as Readable,
         { name: objectKeys[index].split('/').at(-1) }
       )
     })
